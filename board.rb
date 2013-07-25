@@ -105,7 +105,6 @@ class Board
 
   def valid_move_seq?(move_sequence)
     new_board = self.dup
-
     begin
       new_board.perform_moves!(move_sequence)
     rescue InvalidMoveError => message
@@ -120,11 +119,20 @@ class Board
     if valid_move_seq?(move_sequence)
       perform_moves!(move_sequence)
     else
-      raise InvalidMoveSequence, "We could not perform the moves."
+      raise InvalidMoveError, "You could not perform the moves."
     end
   end
 
+  def dup_moves(move_sequence)
+    new_moves = []
+    move_sequence.each do |move|
+      new_moves << move.dup
+    end
+    new_moves
+  end
+
   def perform_moves!(move_sequence)
+    move_sequence = dup_moves(move_sequence)
     if at_position(move_sequence.first).nil?
       raise InvalidMoveError, "You haven't selected a piece to start moving."
     end
@@ -175,6 +183,23 @@ class Board
     puts
     puts "    A   B   C   D   E   F   G   H  "
     puts
+  end
+
+  def winner
+    reds = 0
+    whites = 0
+
+    @grid.each do |row|
+      row.each do |square|
+        next if square.nil?
+        reds += 1 if square.color == :red
+        whites += 1 if square.color == :white
+      end
+    end
+
+    return :red if whites == 0
+    return :white if reds == 0
+    return false
   end
 
 
