@@ -103,6 +103,27 @@ class Board
     set_piece(piece, last_pos)
   end
 
+  def valid_move_seq?(move_sequence)
+    new_board = self.dup
+
+    begin
+      new_board.perform_moves!(move_sequence)
+    rescue InvalidMoveError => message
+      puts message
+      return false
+    end
+
+    return true
+  end
+
+  def perform_moves(move_sequence)
+    if valid_move_seq?(move_sequence)
+      perform_moves!(move_sequence)
+    else
+      raise InvalidMoveSequence, "We could not perform the moves."
+    end
+  end
+
   def perform_moves!(move_sequence)
     if at_position(move_sequence.first).nil?
       raise InvalidMoveError, "You haven't selected a piece to start moving."
@@ -122,6 +143,20 @@ class Board
 
       move_sequence.shift
     end
+  end
+
+  def dup
+    new_board = Board.new
+
+    @grid.each_with_index do |row, row_idx|
+      row.each_with_index do |square, col_idx|
+        next if square.nil?
+        new_piece = square.class.new(square.color, square.position.dup)
+        new_board.set_piece(new_piece, [row_idx, col_idx])
+      end
+    end
+
+    new_board
   end
 
   def print_board

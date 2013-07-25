@@ -3,6 +3,7 @@ require_relative 'board'
 
 class Game
 
+
 end
 
 
@@ -18,8 +19,12 @@ board.perform_moves!([ [2, 1], [3, 2] ])
 board.print_board
 board.perform_moves!([ [3, 2], [5, 0] ])
 board.print_board
-board.perform_moves!([ [1, 2], [3, 4] ])
-board.print_board
+# board.perform_moves!([ [5, 2], [3, 4] ])
+# board.print_board
+
+new_board = board.dup
+
+new_board.print_board
 
 
 
