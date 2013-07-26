@@ -31,7 +31,7 @@ class Board
     @grid[6][7] = Piece.new(:white, [6, 7])
 
     @grid[0][1] = Piece.new(:red, [0, 1])
-    @grid[0][3] = Piece.new(:red, [0, 3])
+    # @grid[0][3] = Piece.new(:red, [0, 3])
     @grid[0][5] = Piece.new(:red, [0, 5])
     @grid[0][7] = Piece.new(:red, [0, 7])
 
@@ -42,7 +42,7 @@ class Board
 
     @grid[1][0] = Piece.new(:red, [1, 0])
     @grid[1][2] = Piece.new(:red, [1, 2])
-    @grid[1][4] = Piece.new(:red, [1, 4])
+    @grid[1][4] = Piece.new(:white, [1, 4])
     @grid[1][6] = Piece.new(:red, [1, 6])
   end
 
@@ -159,7 +159,10 @@ class Board
     @grid.each_with_index do |row, row_idx|
       row.each_with_index do |square, col_idx|
         next if square.nil?
-        new_piece = square.class.new(square.color, square.position.dup)
+        color = square.color
+        position = square.position.dup
+        king = square.king?
+        new_piece = square.class.new(color, position, king)
         new_board.set_piece(new_piece, [row_idx, col_idx])
       end
     end

@@ -1,14 +1,25 @@
 require 'colorize'
 
+
 class Piece
 
-  attr_accessor :position
-  attr_reader :color
+  attr_reader :color, :position
 
-  def initialize(color, position)
+  def position=(position)
+    @position = position
+    row, col = position
+    @king = true if @color == :white && row == 0
+    @king = true if @color == :red && row == 7
+  end
+
+  def initialize(color, position, king = false)
     @color = color
     @position = position
-    @king = false
+    @king = king
+  end
+
+  def king?
+    @king
   end
 
   def move_magnitude(magnitude)
@@ -36,7 +47,10 @@ class Piece
   end
 
   def to_s
-    @color.to_s[0].capitalize.colorize(@color)
+    if @king
+      "K".colorize(@color)
+    else
+      @color.to_s[0].capitalize.colorize(@color)
+    end
   end
-
 end
