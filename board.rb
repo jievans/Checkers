@@ -1,4 +1,5 @@
 require_relative 'piece'
+require 'debugger'
 
 class InvalidMoveError < StandardError
 end
@@ -12,6 +13,16 @@ class Board
   def at_position(position)
     row, col = position
     @grid[row][col]
+  end
+
+  def all_pieces
+    pieces = []
+    @grid.each do |row|
+      row.each do |square|
+        pieces << square unless square.nil?
+      end
+    end
+    pieces
   end
 
   def build_board
@@ -71,9 +82,23 @@ class Board
     unless piece.slide_moves.include?(last_pos)
       raise InvalidMoveError, "Your piece is not allowed to slide there."
     end
+    if all_pieces.any? { |piece| has_jumps?(piece) }
+      raise InvalidMoveError, "One of your pieces must jump."
+    end
 
     to_blank(first_pos)
     set_piece(piece, last_pos)
+  end
+
+  def has_jumps?(piece)
+    cur_pos = piece.position
+    piece.jump_moves.any? do |move|
+      begin
+        valid_move_seq?([cur_pos, move], true)
+      rescue
+        false
+      end
+    end
   end
 
   def perform_jump(first_pos, last_pos)
@@ -103,12 +128,13 @@ class Board
     set_piece(piece, last_pos)
   end
 
-  def valid_move_seq?(move_sequence)
+
+  def valid_move_seq?(move_sequence, silent = false)
     new_board = self.dup
     begin
       new_board.perform_moves!(move_sequence)
     rescue InvalidMoveError => message
-      puts message
+      puts message unless silent
       return false
     end
 
