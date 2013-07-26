@@ -31,7 +31,7 @@ class Board
     @grid[6][7] = Piece.new(:white, [6, 7])
 
     @grid[0][1] = Piece.new(:red, [0, 1])
-    # @grid[0][3] = Piece.new(:red, [0, 3])
+    @grid[0][3] = Piece.new(:red, [0, 3])
     @grid[0][5] = Piece.new(:red, [0, 5])
     @grid[0][7] = Piece.new(:red, [0, 7])
 
@@ -42,7 +42,7 @@ class Board
 
     @grid[1][0] = Piece.new(:red, [1, 0])
     @grid[1][2] = Piece.new(:red, [1, 2])
-    @grid[1][4] = Piece.new(:white, [1, 4])
+    @grid[1][4] = Piece.new(:red, [1, 4])
     @grid[1][6] = Piece.new(:red, [1, 6])
   end
 
